@@ -1,3 +1,4 @@
+use std::time::Duration;
 use idb::{Factory, ObjectStoreParams, TransactionMode};
 use wasm_bindgen_test::wasm_bindgen_test;
 
@@ -198,6 +199,8 @@ async fn test_transaction_read_write_in_loop() {
         assert!(id.is_ok(), "id should be ok: {}", id.unwrap_err());
         let id = id.unwrap();
         assert_eq!(serde_wasm_bindgen::to_value(&i.to_string()).unwrap(), id);
+
+        gloo_timers::future::sleep(Duration::from_secs(1)).await;
     }
 
     let commit = transaction.commit().await;
@@ -219,6 +222,8 @@ async fn test_transaction_read_write_in_loop() {
         let value = store
             .get(serde_wasm_bindgen::to_value(&i.to_string()).unwrap())
             .await;
+
+        gloo_timers::future::sleep(Duration::from_secs(1)).await;
 
         assert!(value.is_ok(), "value should be ok: {}", value.unwrap_err());
         let value = value.unwrap();
